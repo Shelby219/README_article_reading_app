@@ -16,15 +16,14 @@ const main = document.getElementById("main");
 
 
 // Create an Polly client
-const Polly = new AWS.Polly({
-  signatureVersion: 'v4',
-  region: 'ap-southeast-2'
-})
+// const Polly = new AWS.Polly({
+//   signatureVersion: 'v4',
+//   region: 'ap-southeast-2'
+// })
 
-// Create the Polly service object and presigner object
-//var polly = new AWS.Polly({apiVersion: '2016-06-10'});
-//var signer = new AWS.Polly.Presigner(speechParams, polly)
-
+ // Create the Polly service object and presigner object
+ var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+ //var signer = new AWS.Polly.Presigner(params, polly)
 
 //Get request the request URL
 async function makeGetRequest() {
@@ -54,7 +53,6 @@ async function makeGetRequest() {
   const trimmedStory = story.join('').substring(0, 2999)
   console.log(trimmedStory.length)
 
-
   const textArticle = document.createElement("div");
   const textnode = document.createTextNode(trimmedStory); 
   main.appendChild(textArticle);         // Create a text node
@@ -64,20 +62,55 @@ async function makeGetRequest() {
   main.appendChild(playBut); 
   playBut.classList.add("btn", "btn-lg", "btn-secondary");
 
-  let params = {
-    OutputFormat: "mp3",
-    SampleRate: "16000",
-    Text: trimmedStory,
-    TextType: "text",
-    VoiceId: "Matthew"
-};
-//console.log(params);
-  textToSpeechConverter(params, {});
+  
+  return trimmedStory;
+}
+
+//.then((tS) => console.log(tS))
+//console.log(trimmedStory)
+
+onClickfunc = () => {
+  makeGetRequest().then(val => {
+      // do something with the value
+      let params = {
+        OutputFormat: "mp3",
+        SampleRate: "16000",
+        Text: val,
+        TextType: "text",
+        VoiceId: "Matthew"
+      };
+      //console.log(params);
+
+      polly.synthesizeSpeech(params, (err, data) => {
+        if (err) {
+          throw err;
+        } else if (data) {
+            if (data.AudioStream instanceof Buffer) {
+              console.log("test");
+                  Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
+                    if (err) {
+                        return console.log(err)
+                    }
+                    console.log("The file was saved!")
+                })
+
+            }
+        }
+    });
+  })
 
 }
 
-myButton.addEventListener("click", makeGetRequest)
 
+
+
+//button that submits the URL for processing
+myButton.addEventListener("click", onClickfunc)
+
+
+
+
+//code that shows the play button
 const playButton =  document.getElementById('playBut');
   if (typeof(playButton) != 'undefined' && playButton != null)
   {
@@ -86,24 +119,49 @@ const playButton =  document.getElementById('playBut');
   }
 
 
-const textToSpeechConverter = (params, configs) => {
-    Polly.synthesizeSpeech(params, (err, data) => {
-        if (err) {
-          throw err;
-        } else if (data) {
-            if (data.AudioStream instanceof Buffer) {
-              console.log("test");
-                // Read content from the file
-                Fs.writeFile("./speech.mp3", data.AudioStream, function(err) {
-                  if (err) {
-                      return console.log(err)
-                  }
-                  console.log("The file was saved!")
-              })
-            }
-        }
-    });
-};
+  // const textToSpeechConverter = (params, configs) => {
+  //   Polly.synthesizeSpeech(params, (err, data) => {
+  //       if (err) {
+  //         throw err;
+  //       } else if (data) {
+  //           if (data.AudioStream instanceof Buffer) {
+  //             console.log("test");
+  //                 Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
+  //                   if (err) {
+  //                       return console.log(err)
+  //                   }
+  //                   console.log("The file was saved!")
+  //               })
+  
+  
+  //             // const fileContent = fs.readFileSync(data.AudioStream);
+  //             // // Setting up S3 upload parameters
+  //             // const params = {
+  //             //     Bucket: 'pollystorage', // pass your bucket name
+  //             //     Key: 'test.mp3', // file will be saved as bucketname/test file
+  //             // };
+  //             // // Uploading files to the bucket
+  //             // s3.upload(params, function(err, data) {
+  //             //     if (err) {
+  //             //         throw err;
+  //             //     }
+  //             //     console.log(`File uploaded successfully. ${data.Location}`);
+  //             // });
+  
+  
+  //           }
+  //       }
+  //   });
+
+
+
+  // };
+
+
+
+
+
+
 
 
 
