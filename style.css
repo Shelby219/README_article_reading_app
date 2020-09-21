@@ -109,6 +109,16 @@ body {
   font-weight: 700;
 }
 
+#text-article {
+   width: 900px;
+   position: absolute;
+	
+	left: 0;
+	right: 0;
+  	
+	margin: auto;
+}
+
 
 /*
  * Footer

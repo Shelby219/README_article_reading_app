@@ -11,16 +11,13 @@ const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
-// var matcher = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
-// function isUrl(string){
-//   return matcher.test(string);
-// }
+
 
 //Get request the request URL
 async function makeGetRequest() {
-  //event.preventDefault();
+  event.preventDefault();
   let url = document.getElementById("searched-url");
-  //isUrl(url);
+
   console.log(url.value) 
   let res = await axios.get(proxyurl + url.value);
   let data = res.data;
@@ -50,7 +47,35 @@ const playButton =  document.getElementById('playBut');
   }
 
 
+  // Function invoked by button click
+  function speakText() {
+    console.log("pp") 
+          // Create the JSON parameters for getSynthesizeSpeechUrl
+          var speechParams = {
+              OutputFormat: "mp3",
+              SampleRate: "16000",
+              Text: "",
+              TextType: "text",
+              VoiceId: "Matthew"
+          };
 
+          speechParams.Text = text2Speech;
+          
+          // Create the Polly service object and presigner object
+          var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+          var signer = new AWS.Polly.Presigner(speechParams, polly)
+      
+          // Create presigned URL of synthesized speech file
+          signer.getSynthesizeSpeechUrl(speechParams, function(error, url) {
+          if (error) {
+              document.getElementById('result').innerHTML = error;
+          } else {
+              document.getElementById('audioSource').src = url;
+              document.getElementById('audioPlayback').load();
+              document.getElementById('result').innerHTML = "Speech ready to play.";
+          }
+        });
+      }
 
 
 
