@@ -6,30 +6,56 @@
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.756.0.min.js"></script>
     <link rel="stylesheet" href="style.css">
 
 </head>
 
-<body>
-     <h1>ReadME</h1>
-     <p>
-         Enter a URL for a news/blog/info article and a audio file will output!
-     </p>
-
-     <section>
-
-        <input type="url" placeholder="Type to search.." id="searched-url">
-        <button type="button" id="submit-button">Search</button>
-        
-    
+<body class="text-center">
+     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+          <div class="inner">
+            <h3 class="masthead-brand">ReadME</h3>
+            <nav class="nav nav-masthead justify-content-center">
+              <a class="nav-link active" href="#">Home</a>
+              <a class="nav-link" href="#">Features</a>
+              <a class="nav-link" href="#">Contact</a>
+            </nav>
+          </div>
+        </header>
+      
+        <main role="main" class="inner cover">
+          <h1 class="cover-heading">ReadME.</h1>
+          <p class="lead"> Enter a URL for a news/blog/info article and a audio file will output!</p>
+          <p class="lead">
+            <input type="url" placeholder="Type to search.." id="searched-url">
+            <button class="btn btn-lg btn-secondary" type="button" id="submit-button">Search</button> 
+          </p>
           <audio id="audioPlayback" controls>
             <source id="audioSource" type="audio/mp3" src="">
           </audio>
+        </main>
+      
+        <footer class="mastfoot mt-auto">
+          <div class="inner">
+            <p>Coder Academy  <a href="https://getbootstrap.com/"></a>Hackathon Sept, 2020, by <a href="https://twitter.com/mdo">@ben</a><span> & </span><a href="https://twitter.com/theartydev">@theartydev</a>.</p>
+          </div>
+        </footer>
+      </div>
 
-     </section>
+
+
+
+
+
+
       <script src = "bundle.js"></script>
   
 </body>
