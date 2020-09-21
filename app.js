@@ -21,22 +21,25 @@ const main = document.getElementById("main");
 //   region: 'ap-southeast-2'
 // })
 
- // Create the Polly service object and presigner object
+
+// Create the Polly service object and presigner object
  var polly = new AWS.Polly({apiVersion: '2016-06-10'});
- //var signer = new AWS.Polly.Presigner(params, polly)
+
+
+
 
 //Get request the request URL
 async function makeGetRequest() {
   event.preventDefault();
   let url = document.getElementById("searched-url");
 
-  console.log(url.value) 
+  //console.log(url.value)  
+   // Using the URL parameters to get the data from the page
   let res = await axios.get(proxyurl + url.value);
   let data = res.data;
   const $ = cheerio.load(data);
  
   // Print some specific page content
-  //var text2Speech = $('article').text()
   let story = [];
   let title = $("body h1").text().trim();
   let storyArticle = ['The Title of this article is ' + title ].join(' ');
@@ -48,8 +51,10 @@ async function makeGetRequest() {
       }
   });
 
+  //joining the story
   console.log(story.join('').length) 
-  //trim story due to free amazon limits
+
+  //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
   console.log(trimmedStory.length)
 
@@ -62,12 +67,8 @@ async function makeGetRequest() {
   main.appendChild(playBut); 
   playBut.classList.add("btn", "btn-lg", "btn-secondary");
 
-  
   return trimmedStory;
 }
-
-//.then((tS) => console.log(tS))
-//console.log(trimmedStory)
 
 onClickfunc = () => {
   makeGetRequest().then(val => {
@@ -79,35 +80,30 @@ onClickfunc = () => {
         TextType: "text",
         VoiceId: "Matthew"
       };
-      //console.log(params);
+      console.log(params);
 
-      polly.synthesizeSpeech(params, (err, data) => {
-        if (err) {
-          throw err;
-        } else if (data) {
-            if (data.AudioStream instanceof Buffer) {
-              console.log("test");
-                  Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
-                    if (err) {
-                        return console.log(err)
-                    }
-                    console.log("The file was saved!")
-                })
+      // polly.synthesizeSpeech(params, (err, data) => {
+      //   if (err) {
+      //     throw err;
+      //   } else if (data) {
+      //       if (data.AudioStream instanceof Buffer) {
+      //         console.log("test");
+      //             Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
+      //               if (err) {
+      //                   return console.log(err)
+      //               }
+      //               console.log("The file was saved!")
+      //           })
+      //       }
+      //   }
+      // });
 
-            }
-        }
-    });
+
   })
-
 }
-
-
-
 
 //button that submits the URL for processing
 myButton.addEventListener("click", onClickfunc)
-
-
 
 
 //code that shows the play button
@@ -117,85 +113,6 @@ const playButton =  document.getElementById('playBut');
     // Exists.
     playButton.addEventListener("click", speakText)
   }
-
-
-  // const textToSpeechConverter = (params, configs) => {
-  //   Polly.synthesizeSpeech(params, (err, data) => {
-  //       if (err) {
-  //         throw err;
-  //       } else if (data) {
-  //           if (data.AudioStream instanceof Buffer) {
-  //             console.log("test");
-  //                 Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
-  //                   if (err) {
-  //                       return console.log(err)
-  //                   }
-  //                   console.log("The file was saved!")
-  //               })
-  
-  
-  //             // const fileContent = fs.readFileSync(data.AudioStream);
-  //             // // Setting up S3 upload parameters
-  //             // const params = {
-  //             //     Bucket: 'pollystorage', // pass your bucket name
-  //             //     Key: 'test.mp3', // file will be saved as bucketname/test file
-  //             // };
-  //             // // Uploading files to the bucket
-  //             // s3.upload(params, function(err, data) {
-  //             //     if (err) {
-  //             //         throw err;
-  //             //     }
-  //             //     console.log(`File uploaded successfully. ${data.Location}`);
-  //             // });
-  
-  
-  //           }
-  //       }
-  //   });
-
-
-
-  // };
-
-
-
-
-
-
-
-
-
-  // // Function invoked by button click
-  // function speakText() {
-  //   console.log("pp") 
-  //         // Create the JSON parameters for getSynthesizeSpeechUrl
-  //         var speechParams = {
-  //             OutputFormat: "mp3",
-  //             SampleRate: "16000",
-  //             Text: "",
-  //             TextType: "text",
-  //             VoiceId: "Matthew"
-  //         };
-
-  //         speechParams.Text = story;
-          
-  //         // Create the Polly service object and presigner object
-  //         var polly = new AWS.Polly({apiVersion: '2016-06-10'});
-  //         var signer = new AWS.Polly.Presigner(speechParams, polly)
-      
-  //         // Create presigned URL of synthesized speech file
-  //         signer.getSynthesizeSpeechUrl(speechParams, function(error, url) {
-  //         if (error) {
-  //             document.getElementById('result').innerHTML = error;
-  //         } else {
-  //             document.getElementById('audioSource').src = url;
-  //             document.getElementById('audioPlayback').load();
-  //             document.getElementById('result').innerHTML = "Speech ready to play.";
-  //         }
-  //       });
-  //     }
-
-
 
 
 
