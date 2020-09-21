@@ -23,6 +23,10 @@ const Polly = new AWS.Polly({
   region: 'ap-southeast-2'
 })
 
+// Create the Polly service object and presigner object
+//var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+//var signer = new AWS.Polly.Presigner(speechParams, polly)
+
 
 //Get request the request URL
 async function makeGetRequest() {
@@ -49,8 +53,9 @@ async function makeGetRequest() {
 
   console.log(story.join('').length) 
   //trim story due to free amazon limits
-  let trimmedStory = story.join('').substring(0, 2999)
+  const trimmedStory = story.join('').substring(0, 2999)
   console.log(trimmedStory.length)
+
 
   const textArticle = document.createElement("div");
   const textnode = document.createTextNode(trimmedStory); 
@@ -89,7 +94,7 @@ const textToSpeechConverter = (params, configs) => {
           throw err;
         } else if (data) {
             if (data.AudioStream instanceof Buffer) {
-              console.log("params");
+              console.log("test");
                 // Read content from the file
                 Fs.writeFile("./speech.mp3", data.AudioStream, function(err) {
                   if (err) {
