@@ -10,36 +10,44 @@ const cheerio = require('cheerio')
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
-
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
-// var matcher = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
-// function isUrl(string){
-//   return matcher.test(string);
-// }
+
 
 //Get request the request URL
 async function makeGetRequest() {
   event.preventDefault();
   let url = document.getElementById("searched-url");
-  //isUrl(url);
+
   console.log(url.value) 
   let res = await axios.get(proxyurl + url.value);
   let data = res.data;
   const $ = cheerio.load(data);
  
   // Print some specific page content
-  var text2Speech = $('h1').text()
-  console.log(text2Speech) 
+  //var text2Speech = $('article').text()
+  let story = [];
+  let title = $("body h1").text().trim();
+  let storyArticle = ['The Title of this article is ' + title ].join(' ');
+  story.push(storyArticle);
+  $("p").map((_, element) => {
+      let text = $(element).text();
+      if (text.trim() !== 'Written by') {
+          story.push($(element).text());
+      }
+  });
+
+
+  console.log(story) 
   const textArticle = document.createElement("div");
-  const textnode = document.createTextNode(text2Speech); 
+  const textnode = document.createTextNode(story); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
   const playBut = document.createElement("BUTTON");
   playBut.innerHTML = "Play Me";  
   main.appendChild(playBut); 
   playBut.classList.add("btn", "btn-lg", "btn-secondary");
-  return text2Speech;
+  return story;
 }
 
 myButton.addEventListener("click", makeGetRequest)
@@ -50,6 +58,7 @@ const playButton =  document.getElementById('playBut');
     // Exists.
     playButton.addEventListener("click", speakText)
   }
+
 
 
   // // Function invoked by button click

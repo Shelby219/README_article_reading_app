@@ -24,17 +24,29 @@ async function makeGetRequest() {
   const $ = cheerio.load(data);
  
   // Print some specific page content
-  var text2Speech = $('h1').text()
-  console.log(text2Speech) 
+  //var text2Speech = $('article').text()
+  let story = [];
+  let title = $("body h1").text().trim();
+  let storyArticle = ['The Title of this article is ' + title ].join(' ');
+  story.push(storyArticle);
+  $("p").map((_, element) => {
+      let text = $(element).text();
+      if (text.trim() !== 'Written by') {
+          story.push($(element).text());
+      }
+  });
+
+
+  console.log(story) 
   const textArticle = document.createElement("div");
-  const textnode = document.createTextNode(text2Speech); 
+  const textnode = document.createTextNode(story); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
   const playBut = document.createElement("BUTTON");
   playBut.innerHTML = "Play Me";  
   main.appendChild(playBut); 
   playBut.classList.add("btn", "btn-lg", "btn-secondary");
-  return text2Speech;
+  return story;
 }
 
 myButton.addEventListener("click", makeGetRequest)
@@ -47,35 +59,36 @@ const playButton =  document.getElementById('playBut');
   }
 
 
-  // Function invoked by button click
-  function speakText() {
-    console.log("pp") 
-          // Create the JSON parameters for getSynthesizeSpeechUrl
-          var speechParams = {
-              OutputFormat: "mp3",
-              SampleRate: "16000",
-              Text: "",
-              TextType: "text",
-              VoiceId: "Matthew"
-          };
 
-          speechParams.Text = text2Speech;
+  // // Function invoked by button click
+  // function speakText() {
+  //   console.log("pp") 
+  //         // Create the JSON parameters for getSynthesizeSpeechUrl
+  //         var speechParams = {
+  //             OutputFormat: "mp3",
+  //             SampleRate: "16000",
+  //             Text: "",
+  //             TextType: "text",
+  //             VoiceId: "Matthew"
+  //         };
+
+  //         speechParams.Text = text2Speech;
           
-          // Create the Polly service object and presigner object
-          var polly = new AWS.Polly({apiVersion: '2016-06-10'});
-          var signer = new AWS.Polly.Presigner(speechParams, polly)
+  //         // Create the Polly service object and presigner object
+  //         var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+  //         var signer = new AWS.Polly.Presigner(speechParams, polly)
       
-          // Create presigned URL of synthesized speech file
-          signer.getSynthesizeSpeechUrl(speechParams, function(error, url) {
-          if (error) {
-              document.getElementById('result').innerHTML = error;
-          } else {
-              document.getElementById('audioSource').src = url;
-              document.getElementById('audioPlayback').load();
-              document.getElementById('result').innerHTML = "Speech ready to play.";
-          }
-        });
-      }
+  //         // Create presigned URL of synthesized speech file
+  //         signer.getSynthesizeSpeechUrl(speechParams, function(error, url) {
+  //         if (error) {
+  //             document.getElementById('result').innerHTML = error;
+  //         } else {
+  //             document.getElementById('audioSource').src = url;
+  //             document.getElementById('audioPlayback').load();
+  //             document.getElementById('result').innerHTML = "Speech ready to play.";
+  //         }
+  //       });
+  //     }
 
 
 
