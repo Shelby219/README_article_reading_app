@@ -1,11 +1,15 @@
+const axios = require('axios')
+const cheerio = require('cheerio')
+const AWS = require('aws-sdk');
+
+ 
+ 
  // Initialize the Amazon Cognito credentials provider
   AWS.config.region = 'ap-southeast-2'; // Region
   AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
   IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
   });
 
-const axios = require('axios')
-const cheerio = require('cheerio')
 
 
 
@@ -49,7 +53,7 @@ async function makeGetRequest() {
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
   console.log(trimmedStory.length)
-
+   
   const textArticle = document.createElement("div");
   const textnode = document.createTextNode(title); 
   main.appendChild(textArticle);         // Create a text node
