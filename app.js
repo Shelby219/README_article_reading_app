@@ -62,6 +62,7 @@ async function makeGetRequest() {
   return trimmedStory;
 }
 
+
 onClickfunc = () => {
   makeGetRequest().then(val => {
       // after the get request function, then after that is resolved it will return the trimmed text
@@ -86,9 +87,35 @@ onClickfunc = () => {
               document.getElementById('audioPlayback').load();
               document.getElementById('result').innerHTML = "Speech ready to play.";
           }})
+          return val;
     });
+
+//PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
+// This is the way we can send big files to Amazon S3.
+    .then(val => {
+      let params = {
+        OutputFormat: 'mp3', /* required */
+        OutputS3BucketName: 'pollystorage', /* required */
+        Text: val, /* required */
+        VoiceId: 'Joanna', /* required */
+        Engine: 'neural'
+        };
+        polly.startSpeechSynthesisTask(params, function(err, data) {
+          if (err) console.log(err, err.stack); // an error occurred
+          else     console.log(data);
+                  taskID = data.SynthesisTask.TaskId;
+                  console.log(taskID)
     
+          });
+    })
 }
+
+
+
+
+
+
+
 
 //button that submits the URL for processing
 myButton.addEventListener("click", onClickfunc)
