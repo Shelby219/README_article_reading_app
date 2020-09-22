@@ -3,18 +3,18 @@ const cheerio = require('cheerio')
 const AWS = require('aws-sdk');
 
  
- 
- // Initialize the Amazon Cognito credentials provider
-  AWS.config.region = 'ap-southeast-2'; // Region
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
-  IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
-  });
+// Initialize the Amazon Cognito credentials provider
+AWS.config.region = 'ap-southeast-2'; // Region
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
+IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
+});
 
 
 
-
+//enables no issues with CORS
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
+//getting certain elements
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
 const articleURL = document.getElementById("articleURL");
@@ -23,19 +23,17 @@ const articleURL = document.getElementById("articleURL");
 var polly = new AWS.Polly({apiVersion: '2016-06-10'});
 
 
-
 //Get request the request URL
 async function makeGetRequest() {
   event.preventDefault();
   let url = document.getElementById("searched-url");
-
-  //console.log(url.value)  
-   // Using the URL parameters to get the data from the page
+  
+// Using the URL parameters to get the data from the page
   let res = await axios.get(proxyurl + url.value);
   let data = res.data;
   const $ = cheerio.load(data);
  
-  // Print some specific page content
+  // Print some specific article content
   let story = [];
   let title = $("body h1").first().text().trim();
   let storyArticle = ['The Title of this article is ' + title ].join(' ');
@@ -47,19 +45,19 @@ async function makeGetRequest() {
       }
   });
    console.log(story.join(''))
-  //joining the story
-  //console.log(story.join('').length) 
+  
 
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
   //console.log(trimmedStory.length)
    
+  //appending the title to the webpage
   const textArticle = document.createElement("div");
   const textnode = document.createTextNode(storyArticle); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
 
-
+  //audio link alert
   articleURL.innerHTML = "Here is your Audio Link!"
 
   return trimmedStory;
@@ -79,14 +77,15 @@ onClickfunc = () => {
       };
     console.log(params);
 
-  //PUT YOUR CODE HERE FOR THE TEXT TO SPEECH CONVERSION
-    const signer = new AWS.Polly.Presigner(params, polly)
+  const signer = new AWS.Polly.Presigner(params, polly)
     // Create presigned URL of synthesized speech file
         signer.getSynthesizeSpeechUrl(params, function(error, url) {
           if (error) {
               document.getElementById('result').innerHTML = error;
           } else {
+            //putting the audio into the HTML audio elements for playing
               document.getElementById('audioSource').src = url;
+              //apending the URL link to page
               articleURL.href = url;
               document.getElementById('audioPlayback').load();
               document.getElementById('result').innerHTML = "Article ready to play!";
@@ -103,7 +102,7 @@ onClickfunc = () => {
 
 
 
-      
+
     })
 }
 
@@ -113,13 +112,6 @@ onClickfunc = () => {
 myButton.addEventListener("click", onClickfunc)
 
 
-//code that shows the play button
-const playButton =  document.getElementById('playBut');
-  if (typeof(playButton) != 'undefined' && playButton != null)
-  {
-    // Exists.
-    playButton.addEventListener("click", speakText)
-  }
 
 
 
