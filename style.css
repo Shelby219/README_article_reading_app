@@ -119,7 +119,22 @@ body {
 	margin: auto;
 }
 
+#searched-url {
+  height: 45px;
+  width: 300px;
+  font-size: 1em;
+}
 
+#articleURL {
+  font-weight: 500;
+  padding: 7.5px;
+  color: lightgreen;
+}
+
+#audioPlayback {
+  margin-top: 35px;
+
+}
 /*
  * Footer
  */

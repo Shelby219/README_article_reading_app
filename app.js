@@ -6,14 +6,14 @@
 
 const axios = require('axios')
 const cheerio = require('cheerio')
-const Fs = require('fs')
+
 
 
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
-
+const articleURL = document.getElementById("articleURL");
 
 // Create the Polly service object and presigner object
 var polly = new AWS.Polly({apiVersion: '2016-06-10'});
@@ -51,13 +51,12 @@ async function makeGetRequest() {
   console.log(trimmedStory.length)
 
   const textArticle = document.createElement("div");
-  const textnode = document.createTextNode(trimmedStory); 
+  const textnode = document.createTextNode(title); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
-  const playBut = document.createElement("BUTTON");
-  playBut.innerHTML = "Play Me";  
-  main.appendChild(playBut); 
-  playBut.classList.add("btn", "btn-lg", "btn-secondary");
+
+
+  articleURL.innerHTML = "Here is your Audio Link!"
 
   return trimmedStory;
 }
@@ -74,7 +73,7 @@ onClickfunc = () => {
         VoiceId: "Matthew",
         Engine: 'neural'
       };
-      console.log(params);
+    console.log(params);
 
   //PUT YOUR CODE HERE FOR THE TEXT TO SPEECH CONVERSION
     const signer = new AWS.Polly.Presigner(params, polly)
@@ -84,36 +83,33 @@ onClickfunc = () => {
               document.getElementById('result').innerHTML = error;
           } else {
               document.getElementById('audioSource').src = url;
+              articleURL.href = url;
               document.getElementById('audioPlayback').load();
-              document.getElementById('result').innerHTML = "Speech ready to play.";
+              document.getElementById('result').innerHTML = "Article ready to play!";
+              console.log(url)
           }})
-          return val;
-    });
+      return val;
+    })
 
 //PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
 // This is the way we can send big files to Amazon S3.
     .then(val => {
-      let params = {
-        OutputFormat: 'mp3', /* required */
-        OutputS3BucketName: 'pollystorage', /* required */
-        Text: val, /* required */
-        VoiceId: 'Joanna', /* required */
-        Engine: 'neural'
-        };
-        polly.startSpeechSynthesisTask(params, function(err, data) {
-          if (err) console.log(err, err.stack); // an error occurred
-          else     console.log(data);
-                  taskID = data.SynthesisTask.TaskId;
-                  console.log(taskID)
+      // let params = {
+      //   OutputFormat: 'mp3', /* required */
+      //   OutputS3BucketName: 'pollystorage', /* required */
+      //   Text: val, /* required */
+      //   VoiceId: 'Joanna', /* required */
+      //   Engine: 'neural'
+      //   };
+      //   polly.startSpeechSynthesisTask(params, function(err, data) {
+      //     if (err) console.log(err, err.stack); // an error occurred
+      //     else     console.log(data);
+      //             taskID = data.SynthesisTask.TaskId;
+      //             console.log(taskID)
     
-          });
+      //     });
     })
 }
-
-
-
-
-
 
 
 
