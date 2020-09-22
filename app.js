@@ -18,6 +18,8 @@ const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
 const articleURL = document.getElementById("articleURL");
+const spinnerLoad = document.getElementById("spinny-loader");
+
 
 // Create the Polly service object and presigner object
 var polly = new AWS.Polly({apiVersion: '2016-06-10'});
@@ -25,7 +27,9 @@ var polly = new AWS.Polly({apiVersion: '2016-06-10'});
 
 //Get request the request URL
 async function makeGetRequest() {
-  event.preventDefault();
+  //event.preventDefault();
+  //adding the spinner class from bootstrap on for a loading bar
+  spinnerLoad.classList.add("spinner-border")
   let url = document.getElementById("searched-url");
   
 // Using the URL parameters to get the data from the page
@@ -44,14 +48,17 @@ async function makeGetRequest() {
           story.push($(element).text());
       }
   });
-   console.log(story.join(''))
+  // console.log(story.join(''))
   
 
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
   //console.log(trimmedStory.length)
    
-  //appending the title to the webpage
+ 
+  //removing the spinner class from bootstrap on for a loading bar$
+  spinnerLoad.classList.remove("spinner-border")
+   //appending the title to the webpage
   const textArticle = document.createElement("div");
   const textnode = document.createTextNode(storyArticle); 
   main.appendChild(textArticle);         // Create a text node
