@@ -95,20 +95,20 @@ onClickfunc = () => {
 //PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
 // This is the way we can send big files to Amazon S3.
     .then(val => {
-      let params = {
-        OutputFormat: 'mp3', /* required */
-        OutputS3BucketName: 'pollystorage', /* required */
-        Text: val, /* required */
-        VoiceId: 'Joanna', /* required */
-        Engine: 'neural'
-        };
-        polly.startSpeechSynthesisTask(params, function(err, data) {
-          if (err) console.log(err, err.stack); // an error occurred
-          else     console.log(data);
-                  taskID = data.SynthesisTask.TaskId;
-                  console.log(taskID)
+      // let params = {
+      //   OutputFormat: 'mp3', /* required */
+      //   OutputS3BucketName: 'pollystorage', /* required */
+      //   Text: val, /* required */
+      //   VoiceId: 'Joanna', /* required */
+      //   Engine: 'neural'
+      //   };
+      //   polly.startSpeechSynthesisTask(params, function(err, data) {
+      //     if (err) console.log(err, err.stack); // an error occurred
+      //     else     console.log(data);
+      //             taskID = data.SynthesisTask.TaskId;
+      //             console.log(taskID)
     
-          });
+      //     });
     })
 }
 
