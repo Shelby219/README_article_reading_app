@@ -54,12 +54,9 @@ async function makeGetRequest() {
   const textnode = document.createTextNode(title); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
-  const playBut = document.createElement("BUTTON");
-  playBut.innerHTML = "Play Me";  
-  main.appendChild(playBut); 
-  playBut.classList.add("btn", "btn-lg", "btn-secondary");
 
-  articleURL.innerHTML = "Here is your Link!"
+
+  articleURL.innerHTML = "Here is your Audio Link!"
 
   return trimmedStory;
 }
@@ -88,7 +85,7 @@ onClickfunc = () => {
               document.getElementById('audioSource').src = url;
               articleURL.href = url;
               document.getElementById('audioPlayback').load();
-              document.getElementById('result').innerHTML = "Speech ready to play.";
+              document.getElementById('result').innerHTML = "Article ready to play!";
               console.log(url)
           }})
       return val;
