@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/Shelby219/hackathon_javascript#readme",
   "dependencies": {
-    "article-parser": "^4.2.3",
+    "aws-sdk": "^2.757.0",
     "axios": "^0.20.0",
-    "cheerio": "^1.0.0-rc.3",
-    "sanitize-html": "^1.27.4"
+    "browserify": "^16.5.2",
+    "cheerio": "^1.0.0-rc.3"
   }
 }
