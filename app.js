@@ -9,8 +9,6 @@ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
 });
 
-
-
 //enables no issues with CORS
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
@@ -107,12 +105,8 @@ onClickfunc = () => {
      
 
 
-
-
-
     })
 }
-
 
 
 //button that submits the URL for processing
