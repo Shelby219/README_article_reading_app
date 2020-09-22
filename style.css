@@ -64,6 +64,7 @@ body {
 
 .masthead-brand {
   margin-bottom: 0;
+  color:#00ff99;
 }
 
 .nav-masthead .nav-link {
@@ -128,9 +129,11 @@ body {
 #articleURL {
   font-weight: 500;
   padding: 7.5px;
-  color: lightgreen;
+  color: #00ff99;
 }
+#submit-button{
 
+}
 #audioPlayback {
   margin-top: 35px;
 
