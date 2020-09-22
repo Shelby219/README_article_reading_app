@@ -37,7 +37,7 @@ async function makeGetRequest() {
  
   // Print some specific page content
   let story = [];
-  let title = $("body h1").text().trim();
+  let title = $("body h1").first().text().trim();
   let storyArticle = ['The Title of this article is ' + title ].join(' ');
   story.push(storyArticle);
   $("p").map((_, element) => {
@@ -46,16 +46,16 @@ async function makeGetRequest() {
           story.push($(element).text());
       }
   });
-
+   console.log(story.join(''))
   //joining the story
   //console.log(story.join('').length) 
 
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
-  console.log(trimmedStory.length)
+  //console.log(trimmedStory.length)
    
   const textArticle = document.createElement("div");
-  const textnode = document.createTextNode(title); 
+  const textnode = document.createTextNode(storyArticle); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
 
@@ -98,20 +98,12 @@ onClickfunc = () => {
 //PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
 // This is the way we can send big files to Amazon S3.
     .then(val => {
-      // let params = {
-      //   OutputFormat: 'mp3', /* required */
-      //   OutputS3BucketName: 'pollystorage', /* required */
-      //   Text: val, /* required */
-      //   VoiceId: 'Joanna', /* required */
-      //   Engine: 'neural'
-      //   };
-      //   polly.startSpeechSynthesisTask(params, function(err, data) {
-      //     if (err) console.log(err, err.stack); // an error occurred
-      //     else     console.log(data);
-      //             taskID = data.SynthesisTask.TaskId;
-      //             console.log(taskID)
-    
-      //     });
+     
+
+
+
+
+      
     })
 }
 
