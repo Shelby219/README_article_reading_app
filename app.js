@@ -68,7 +68,6 @@ async function makeGetRequest() {
   return trimmedStory;
 }
 
-
 onClickfunc = () => {
   makeGetRequest().then(val => {
       // after the get request function, then after that is resolved it will return the trimmed text
