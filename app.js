@@ -1,8 +1,8 @@
-AWS.config.region = 'ap-southeast-2'; // Region
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
-});
-
+ // Initialize the Amazon Cognito credentials provider
+  AWS.config.region = 'ap-southeast-2'; // Region
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
+  IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
+  });
 
 const axios = require('axios')
 const cheerio = require('cheerio')
@@ -15,16 +15,8 @@ const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
 
 
-// Create an Polly client
-// const Polly = new AWS.Polly({
-//   signatureVersion: 'v4',
-//   region: 'ap-southeast-2'
-// })
-
-
 // Create the Polly service object and presigner object
- var polly = new AWS.Polly({apiVersion: '2016-06-10'});
-
+var polly = new AWS.Polly({apiVersion: '2016-06-10'});
 
 
 
@@ -52,7 +44,7 @@ async function makeGetRequest() {
   });
 
   //joining the story
-  console.log(story.join('').length) 
+  //console.log(story.join('').length) 
 
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('').substring(0, 2999)
@@ -70,37 +62,60 @@ async function makeGetRequest() {
   return trimmedStory;
 }
 
+
 onClickfunc = () => {
   makeGetRequest().then(val => {
-      // do something with the value
+      // after the get request function, then after that is resolved it will return the trimmed text
       let params = {
         OutputFormat: "mp3",
         SampleRate: "16000",
         Text: val,
         TextType: "text",
-        VoiceId: "Matthew"
+        VoiceId: "Matthew",
+        Engine: 'neural'
       };
       console.log(params);
 
-      // polly.synthesizeSpeech(params, (err, data) => {
-      //   if (err) {
-      //     throw err;
-      //   } else if (data) {
-      //       if (data.AudioStream instanceof Buffer) {
-      //         console.log("test");
-      //             Fs.writeFile("./test.mp3", data.AudioStream, function(err) {
-      //               if (err) {
-      //                   return console.log(err)
-      //               }
-      //               console.log("The file was saved!")
-      //           })
-      //       }
-      //   }
-      // });
+  //PUT YOUR CODE HERE FOR THE TEXT TO SPEECH CONVERSION
+    const signer = new AWS.Polly.Presigner(params, polly)
+    // Create presigned URL of synthesized speech file
+        signer.getSynthesizeSpeechUrl(params, function(error, url) {
+          if (error) {
+              document.getElementById('result').innerHTML = error;
+          } else {
+              document.getElementById('audioSource').src = url;
+              document.getElementById('audioPlayback').load();
+              document.getElementById('result').innerHTML = "Speech ready to play.";
+          }})
+          return val;
+    });
 
-
-  })
+//PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
+// This is the way we can send big files to Amazon S3.
+    .then(val => {
+      let params = {
+        OutputFormat: 'mp3', /* required */
+        OutputS3BucketName: 'pollystorage', /* required */
+        Text: val, /* required */
+        VoiceId: 'Joanna', /* required */
+        Engine: 'neural'
+        };
+        polly.startSpeechSynthesisTask(params, function(err, data) {
+          if (err) console.log(err, err.stack); // an error occurred
+          else     console.log(data);
+                  taskID = data.SynthesisTask.TaskId;
+                  console.log(taskID)
+    
+          });
+    })
 }
+
+
+
+
+
+
+
 
 //button that submits the URL for processing
 myButton.addEventListener("click", onClickfunc)
