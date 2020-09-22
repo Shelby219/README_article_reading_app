@@ -10,7 +10,18 @@ Reading through Medium? The News? Other Articles? Ads getting in the way, or you
 ReadMe is an 'article reading service' in which a user inputs a link to an article and ReadMe website converts the text from the article to audio and outputs a file that can either be downloaded or streamed  directly from the site.
 
 ## How it works?
+-User can input a URL into the search 
+-Axios will then get the URL
+-Cheerio will scrape the article headings and text from the page
+-The Article Title Will Output
+-Amazon Polly will then Synthesize the text into the HTML Audio player for output
+-Amazon Polly will also process the URL into a clickable link
 
+## Future Features
+-User being able to input their email address for the file to be sent to them
+-Fine tuning of the text scraping so most articles would be compatible(Node Module Puppateer would allow for this, however can only be used on a server)
+-The output file being a downloadable audio file
+-Change reading voice options
 
 ## Technologies Used
 - Axios
@@ -29,3 +40,4 @@ ReadMe is an 'article reading service' in which a user inputs a link to an artic
 ## Screenshots
 
 ![Screen Shot](Shot1.png)
+![Screen Shot](Shot2.png)
