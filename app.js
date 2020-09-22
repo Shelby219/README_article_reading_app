@@ -74,7 +74,7 @@ onClickfunc = () => {
         VoiceId: "Matthew",
         Engine: 'neural'
       };
-      console.log(params);
+    console.log(params);
 
   //PUT YOUR CODE HERE FOR THE TEXT TO SPEECH CONVERSION
     const signer = new AWS.Polly.Presigner(params, polly)
@@ -87,8 +87,8 @@ onClickfunc = () => {
               document.getElementById('audioPlayback').load();
               document.getElementById('result').innerHTML = "Speech ready to play.";
           }})
-          return val;
-    });
+      return val;
+    })
 
 //PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
 // This is the way we can send big files to Amazon S3.
@@ -109,10 +109,6 @@ onClickfunc = () => {
           });
     })
 }
-
-
-
-
 
 
 
