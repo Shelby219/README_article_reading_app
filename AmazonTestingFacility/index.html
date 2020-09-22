@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>AWS SDK for JavaScript - Browser Getting Started Application</title>
+  </head>
+
+  <body>
+    <!-- basic polly conversion -->
+    <div id="textToSynth">
+      <input autofocus size="23" type="text" id="textEntry" value="It's very good to meet you."/>
+      <button class="btn default" onClick="speakText()">Synthesize</button>
+
+      <!-- polly to s3 conversion  -->
+      <input autofocus size="23" type="text" id="textEntry2" value="this onewillcreate a file."/>
+      <button class="btn default" onClick="createFile()">create a file</button>
+
+
+
+
+
+    <!-- basic polly text input -->
+    <p id="result">Enter text above then click Synthesize</p>
+
+    <!-- polly to s3 text input  -->
+      <p id="result2">Enter text above then click Synthesize2</p>
+    </div>
+
+
+
+    <audio id="audioPlayback" controls>
+      <source id="audioSource" type="audio/mp3" src="">
+    </audio>
+
+    <audio id="audioPlayback2" controls>
+        <source id="audioSource2" type="audio/mp3" src="">
+      </audio>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.756.0.min.js"></script>
+    <script type="text/javascript">
+
+        // Initialize the Amazon Cognito credentials provider
+        AWS.config.region = 'ap-southeast-2'; // Region
+        AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
+        IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
+        });
+        
+
+
+        // Function invoked by button click
+        function speakText() {
+            // Create the JSON parameters for getSynthesizeSpeechUrl
+            let speechParams = {
+                OutputFormat: "mp3",
+                SampleRate: "16000",
+                Text: "",
+                TextType: "text",
+                VoiceId: "Matthew",
+                Engine: 'neural'
+            };
+            speechParams.Text = document.getElementById("textEntry").value;
+            
+            // Create the Polly service object and presigner object
+            let polly = new AWS.Polly({apiVersion: '2016-06-10'});
+            let signer = new AWS.Polly.Presigner(speechParams, polly)
+        
+            // Create presigned URL of synthesized speech file
+            signer.getSynthesizeSpeechUrl(speechParams, function(error, url) {
+            if (error) {
+                document.getElementById('result').innerHTML = error;
+            } else {
+                document.getElementById('audioSource').src = url;
+                document.getElementById('audioPlayback').load();
+                document.getElementById('result').innerHTML = "Speech ready to play.";
+            }
+          });
+        }
+
+
+
+
+
+// THE GET FUNCTION 
+function getStatus(taskId){
+  let polly = new AWS.Polly({apiVersion: '2016-06-10'});
+  let paramsss = { TaskId: taskId };  
+  
+  polly.getSpeechSynthesisTask(paramsss, function(err, data) {
+      status = data.SynthesisTask.TaskStatus
+      console.log("AM I EVEN HERE status", status)
+      status == "completed" ? console.log("Yasss") : setTimeout(() => getStatus(taskId), 3000);
+  });
+}
+             
+
+
+        // This is the way we can send big files to Amazon S3.
+        const createFile = () => {
+            let params = {
+                OutputFormat: 'mp3', /* required */
+                OutputS3BucketName: 'pollystorage', /* required */
+                Text: '', /* required */
+                VoiceId: 'Joanna', /* required */
+                Engine: 'neural'
+                };
+
+                params.Text = document.getElementById("textEntry2").value;
+
+                let polly = new AWS.Polly({apiVersion: '2016-06-10'});
+                console.log("polly console log", polly)
+                let signer = new AWS.Polly.Presigner(params, polly)
+                console.log("signer console log", signer)
+
+                polly.startSpeechSynthesisTask(params, function(err, data) {
+                if (err) console.log(err, err.stack); // an error occurred
+                else
+                console.log("Right after Polly Start", data)
+                console.log("check post Request");
+                 taskId = data.SynthesisTask.TaskId;
+                 console.log("the returned ID from CREATE", taskId)
+                 getStatus(taskId)           
+                });
+              }
+    </script>
+  </body>
+</html>
