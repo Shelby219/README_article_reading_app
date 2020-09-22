@@ -28,4 +28,4 @@ ReadMe is an 'article reading service' in which a user inputs a link to an artic
 
 ## Screenshots
 
-![Screen Shot](shot1.png)
+![Screen Shot](Shot1.png)
