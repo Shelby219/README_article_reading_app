@@ -23,7 +23,7 @@ ReadMe is an 'article reading service' in which a user inputs a link to an artic
 - User being able to input their email address for the file to be sent to them
 - Fine tuning of the text scraping so most articles would be compatible(Node Module Puppeteer would allow for this, however can only be used on a server)
 - The output file being a downloadable audio file
-- Change reading voice options
+- Settings Page: Choose Voice, speaking speed and other optional parameters
 
 ## Technologies Used
 - Axios
