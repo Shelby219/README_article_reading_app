@@ -20,7 +20,7 @@ const spinnerLoad = document.getElementById("spinny-loader");
 
 
 // Create the Polly service object and presigner object
-var polly = new AWS.Polly({apiVersion: '2016-06-10'});
+const polly = new AWS.Polly({apiVersion: '2016-06-10'});
 
 
 //Get request the request URL
@@ -35,7 +35,7 @@ async function makeGetRequest() {
   let data = res.data;
   const $ = cheerio.load(data);
  
-  // Print some specific article content
+// Print some specific article content
   let story = [];
   let title = $("body h1").first().text().trim();
   let storyArticle = ['The Title of this article is ' + title ].join(' ');
@@ -47,13 +47,11 @@ async function makeGetRequest() {
       }
   });
   // console.log(story.join(''))
-  
-
-  //trim story due to free amazon limits to 2999 characters
-  const trimmedStory = story.join('').substring(0, 2999)
-  //console.log(trimmedStory.length)
-   
  
+  //trim story due to free amazon limits to 2999 characters
+  const trimmedStory = story.join('. ').substring(0, 2999)
+  //console.log(trimmedStory)
+   
   //removing the spinner class from bootstrap on for a loading bar$
   spinnerLoad.classList.remove("spinner-border")
    //appending the title to the webpage
@@ -68,7 +66,6 @@ async function makeGetRequest() {
   return trimmedStory;
 }
 
-
 onClickfunc = () => {
   makeGetRequest().then(val => {
       // after the get request function, then after that is resolved it will return the trimmed text
@@ -82,7 +79,7 @@ onClickfunc = () => {
       };
     console.log(params);
 
-  const signer = new AWS.Polly.Presigner(params, polly)
+const signer = new AWS.Polly.Presigner(params, polly)
     // Create presigned URL of synthesized speech file
         signer.getSynthesizeSpeechUrl(params, function(error, url) {
           if (error) {
@@ -94,20 +91,40 @@ onClickfunc = () => {
               articleURL.href = url;
               document.getElementById('audioPlayback').load();
               document.getElementById('result').innerHTML = "Article ready to play!";
-              console.log(url)
+             // console.log(url)
           }})
-      return val;
-    })
 
-//PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
-// This is the way we can send big files to Amazon S3.
-    .then(val => {
-     
+//THIS IS FOR FUTURE CODE OUTPUTTING TO s3
+        // let paramsss = {
+        //     OutputFormat: 'mp3', 
+        //     OutputS3BucketName: 'pollystorage', 
+        //     Text: val,
+        //     VoiceId: 'Joanna', 
+        //     Engine: 'neural'
+        //     };
+        //     polly.startSpeechSynthesisTask(paramsss, function taskID(err, data) {
+        //     if (err) console.log(err, err.stack); // an error occurred
+        //     else    console.log(data)
+        //     return data.SynthesisTask.TaskId
+        //     });
+        //     console.log(taskID())
 
+      //return taskID();
 
-    })
+//THIS IS FOR FUTURE CODE OUTPUTTING TO s3
+//     }).then(taskID => {
+//       // setTimeout(function(){
+//       // let paramssss = {TaskId: taskID}
+//       // polly.getSpeechSynthesisTask(paramssss, function(err, data) {
+//       //         if (err) console.log(err, err.stack); // an error occurred
+//       //         else     console.log(data);
+//       //         status = data.SynthesisTask.TaskStatus;
+//       //             console.log(status)
+//       //         return status;
+//       //       })
+//       //     }, 5000);
+  })
 }
-
 
 //button that submits the URL for processing
 myButton.addEventListener("click", onClickfunc)
