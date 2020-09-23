@@ -18,10 +18,8 @@ const main = document.getElementById("main");
 const articleURL = document.getElementById("articleURL");
 const spinnerLoad = document.getElementById("spinny-loader");
 
-
 // Create the Polly service object and presigner object
 const polly = new AWS.Polly({apiVersion: '2016-06-10'});
-
 
 //Get request the request URL
 async function makeGetRequest() {
@@ -50,7 +48,7 @@ async function makeGetRequest() {
  
   //trim story due to free amazon limits to 2999 characters
   const trimmedStory = story.join('. ').substring(0, 2999)
-  //console.log(trimmedStory)
+  console.log(trimmedStory)
    
   //removing the spinner class from bootstrap on for a loading bar$
   spinnerLoad.classList.remove("spinner-border")
