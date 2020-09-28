@@ -3,41 +3,39 @@ const cheerio = require('cheerio')
 const AWS = require('aws-sdk');
 
  
- 
- // Initialize the Amazon Cognito credentials provider
-  AWS.config.region = 'ap-southeast-2'; // Region
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
-  IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
-  });
+// Initialize the Amazon Cognito credentials provider
+AWS.config.region = 'ap-southeast-2'; // Region
+AWS.config.credentials = new AWS.CognitoIdentityCredentials({   
+IdentityPoolId: 'ap-southeast-2:668ff36c-bac5-46f3-84af-d36e3fb590ec',
+});
 
-
-
-
+//enables no issues with CORS
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 
+//getting certain elements
 const myButton = document.getElementById("submit-button");
 const main = document.getElementById("main");
 const articleURL = document.getElementById("articleURL");
+const spinnerLoad = document.getElementById("spinny-loader");
 
 // Create the Polly service object and presigner object
-var polly = new AWS.Polly({apiVersion: '2016-06-10'});
-
-
+const polly = new AWS.Polly({apiVersion: '2016-06-10'});
 
 //Get request the request URL
 async function makeGetRequest() {
-  event.preventDefault();
+  //event.preventDefault();
+  //adding the spinner class from bootstrap on for a loading bar
+  spinnerLoad.classList.add("spinner-border")
   let url = document.getElementById("searched-url");
-
-  //console.log(url.value)  
-   // Using the URL parameters to get the data from the page
+  
+// Using the URL parameters to get the data from the page
   let res = await axios.get(proxyurl + url.value);
   let data = res.data;
   const $ = cheerio.load(data);
  
-  // Print some specific page content
+// Print some specific article content
   let story = [];
-  let title = $("body h1").text().trim();
+  let title = $("body h1").first().text().trim();
   let storyArticle = ['The Title of this article is ' + title ].join(' ');
   story.push(storyArticle);
   $("p").map((_, element) => {
@@ -46,25 +44,25 @@ async function makeGetRequest() {
           story.push($(element).text());
       }
   });
-
-  //joining the story
-  //console.log(story.join('').length) 
-
+  // console.log(story.join(''))
+ 
   //trim story due to free amazon limits to 2999 characters
-  const trimmedStory = story.join('').substring(0, 2999)
-  console.log(trimmedStory.length)
+  const trimmedStory = story.join('. ').substring(0, 2999)
+  console.log(trimmedStory)
    
+  //removing the spinner class from bootstrap on for a loading bar$
+  spinnerLoad.classList.remove("spinner-border")
+   //appending the title to the webpage
   const textArticle = document.createElement("div");
-  const textnode = document.createTextNode(title); 
+  const textnode = document.createTextNode(storyArticle); 
   main.appendChild(textArticle);         // Create a text node
   textArticle.appendChild(textnode); 
 
-
+  //audio link alert
   articleURL.innerHTML = "Here is your Audio Link!"
 
   return trimmedStory;
 }
-
 
 onClickfunc = () => {
   makeGetRequest().then(val => {
@@ -79,55 +77,57 @@ onClickfunc = () => {
       };
     console.log(params);
 
-  //PUT YOUR CODE HERE FOR THE TEXT TO SPEECH CONVERSION
-    const signer = new AWS.Polly.Presigner(params, polly)
+const signer = new AWS.Polly.Presigner(params, polly)
     // Create presigned URL of synthesized speech file
         signer.getSynthesizeSpeechUrl(params, function(error, url) {
           if (error) {
               document.getElementById('result').innerHTML = error;
           } else {
+            //putting the audio into the HTML audio elements for playing
               document.getElementById('audioSource').src = url;
+              //apending the URL link to page
               articleURL.href = url;
               document.getElementById('audioPlayback').load();
               document.getElementById('result').innerHTML = "Article ready to play!";
-              console.log(url)
+             // console.log(url)
           }})
-      return val;
-    })
 
-//PUT YOUR CODE HERE FOR THE UPLOADED FILE TO s3
-// This is the way we can send big files to Amazon S3.
-    .then(val => {
-      // let params = {
-      //   OutputFormat: 'mp3', /* required */
-      //   OutputS3BucketName: 'pollystorage', /* required */
-      //   Text: val, /* required */
-      //   VoiceId: 'Joanna', /* required */
-      //   Engine: 'neural'
-      //   };
-      //   polly.startSpeechSynthesisTask(params, function(err, data) {
-      //     if (err) console.log(err, err.stack); // an error occurred
-      //     else     console.log(data);
-      //             taskID = data.SynthesisTask.TaskId;
-      //             console.log(taskID)
-    
-      //     });
-    })
+//THIS IS FOR FUTURE CODE OUTPUTTING TO s3
+        // let paramsss = {
+        //     OutputFormat: 'mp3', 
+        //     OutputS3BucketName: 'pollystorage', 
+        //     Text: val,
+        //     VoiceId: 'Joanna', 
+        //     Engine: 'neural'
+        //     };
+        //     polly.startSpeechSynthesisTask(paramsss, function taskID(err, data) {
+        //     if (err) console.log(err, err.stack); // an error occurred
+        //     else    console.log(data)
+        //     return data.SynthesisTask.TaskId
+        //     });
+        //     console.log(taskID())
+
+      //return taskID();
+
+//THIS IS FOR FUTURE CODE OUTPUTTING TO s3
+//     }).then(taskID => {
+//       // setTimeout(function(){
+//       // let paramssss = {TaskId: taskID}
+//       // polly.getSpeechSynthesisTask(paramssss, function(err, data) {
+//       //         if (err) console.log(err, err.stack); // an error occurred
+//       //         else     console.log(data);
+//       //         status = data.SynthesisTask.TaskStatus;
+//       //             console.log(status)
+//       //         return status;
+//       //       })
+//       //     }, 5000);
+  })
 }
-
-
 
 //button that submits the URL for processing
 myButton.addEventListener("click", onClickfunc)
 
 
-//code that shows the play button
-const playButton =  document.getElementById('playBut');
-  if (typeof(playButton) != 'undefined' && playButton != null)
-  {
-    // Exists.
-    playButton.addEventListener("click", speakText)
-  }
 
 
 

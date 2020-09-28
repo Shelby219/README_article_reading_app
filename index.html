@@ -37,15 +37,17 @@
           <p class="lead"> Enter a URL for a news article and an audio file will output!</p>
           <p class="lead">
             <input type="url" placeholder="Type to search.." id="searched-url">
-            <button class="btn btn-lg btn-secondary" type="button" id="submit-button">Search</button> 
+            <button class="btn btn-lg btn-secondary " type="button" id="submit-button">Submit URL</button> 
           </p>
-          <!-- basic polly text input -->
+          
+          <div id= "spinny-loader" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          
          <p id="result"></p>
          <div><a id = "articleURL" href="url"></a></div>
 
-         <section id="text-article" >
-
-        </section>
+        
          
          <audio id="audioPlayback" controls>
             <source id="audioSource" type="audio/mp3" src="">
@@ -60,10 +62,6 @@
           </div>
         </footer>
       </div>
-
-
-
-
 
 
 
