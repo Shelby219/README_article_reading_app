@@ -1,1 +1,1 @@
-node_modules
+debug.log $ git rm node_modules rm node_modules $ git commit -m Start ignoring mods
