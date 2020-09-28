@@ -1,7 +1,7 @@
 # ReadME
 ## Ben Rochlin & Shelby El-rassi, Flex-track 2020
 
-![Man-Reading Newspaper](images.jpeg)
+![Man-Reading Newspaper](src/imgs/images.jpeg)
 
 ## Problem to be solved?
 Reading through Medium? The News? Other Articles? Ads getting in the way, or you simply do not have time to sit and read the whole thing? ReadMe is the article reading service you need. By inputting the URL the audio will be output ready to listen.  
@@ -57,8 +57,8 @@ ReadMe is an 'article reading service' in which a user inputs a link to an artic
 
 ## Screenshots
 
-![Screen Shot](Shot1.png)
-![Screen Shot](Shot2.png)
+![Screen Shot](src/imgs/Shot1.png)
+![Screen Shot](src/imgs/Shot2.png)
 
 
 ## Credit
