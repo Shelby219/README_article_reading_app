@@ -4,7 +4,7 @@
 ![Man-Reading Newspaper](src/imgs/images.jpeg)
 
 ## Problem to be solved?
-Reading through Medium? The News? Other Articles? Ads getting in the way, or you simply do not have time to sit and read the whole thing? ReadMe is the article reading service you need. By inputting the URL the audio will be output ready to listen.  
+Reading through Medium? The News? Other Articles? Ads getting in the way, or would you rather listen to an audio version? ReadMe is the article reading service you need. By inputting the URL the audio will be output ready to listen. It also is a great Accessibility tool.
 
 ## Initial Idea
 - Utilising a web scraper for any news article/blog/post
